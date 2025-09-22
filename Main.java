@@ -44,6 +44,11 @@ public class Main extends Application {
         Label taxiCharges = new Label("Taxi charges:");
         Label conOrSem = new Label("Conference or seminar registration fees:");
         Label lod = new Label("Lodging charges per night:");
+        Label error = new Label("");
+        
+        Label l1 = new Label("");
+        Label l2 = new Label("");
+        Label l3 = new Label("");
         
         TextField daysT = new TextField();
         TextField airT = new TextField();
@@ -59,13 +64,16 @@ public class Main extends Application {
         Button clear = new Button("Clear");
         enter.setDisable(true);
         
+        error.setId("error");
+        title.setId("title");
+        
         for (int i = 0; i < texts.length; i++) {
-            texts[i].setOnKeyPressed(event ->{
+            texts[i].setOnKeyReleased(event ->{
                if (!(daysT.getText().equals("")) && !(airT.getText().equals("")) && !(carT.getText().equals("")) && !(milesT.getText().equals(""))) {
                     if (!(parkT.getText().equals("")) && !(taxiT.getText().equals("")) && !(conT.getText().equals("")) && !(lodT.getText().equals(""))) {
                         enter.setDisable(false);
                     }
-                } 
+                }
             });
         }
         
@@ -77,6 +85,66 @@ public class Main extends Application {
         });
         
         enter.setOnMouseClicked(event ->{
+            int sum = 0;
+            int reinburse = 0;
+            
+            //Input checks
+            if (isAlpha(daysT.getText())) {
+                error.setText("Days cannot contain a letter or space");
+                return;
+            }
+            if (isAlpha(airT.getText())) {
+                error.setText("Airfare cannot contain a letter or space");
+                return;
+            }
+            if (isAlpha(carT.getText())) {
+                error.setText("Car rental cannot contain a letter or space");
+                return;
+            }
+            if (isAlpha(milesT.getText())) {
+                error.setText("Miles cannot contain a letter or space");
+                return;
+            }
+            if (isAlpha(parkT.getText())) {
+                error.setText("Parking fees cannot contain a letter or space");
+                return;
+            }
+            if (isAlpha(taxiT.getText())) {
+                error.setText("Taxi charges cannot contain a letter or space");
+                return;
+            }
+            if (isAlpha(conT.getText())) {
+                error.setText("Conferenc or seminar fees cannot contain a letter or space");
+                return;
+            }
+            if (isAlpha(lodT.getText())) {
+                error.setText("Lodging charges cannot contain a letter or space");
+                return;
+            }
+            
+            error.setText("");
+            
+            sum += Integer.parseInt(airT.getText().trim());
+            sum += Integer.parseInt(carT.getText().trim());
+            sum += Integer.parseInt(parkT.getText().trim());
+            sum += Integer.parseInt(taxiT.getText().trim());
+            sum += Integer.parseInt(conT.getText().trim());
+            sum += Integer.parseInt(lodT.getText().trim());
+            sum += Integer.parseInt(milesT.getText().trim()) * 0.27;
+            
+            
+            reinburse += Integer.parseInt(daysT.getText().trim()) * 37;
+            reinburse += Integer.parseInt(daysT.getText().trim())* 10;
+            reinburse += Integer.parseInt(daysT.getText().trim())* 20;
+            reinburse += Integer.parseInt(daysT.getText().trim())* 95;
+            reinburse += Integer.parseInt(milesT.getText().trim()) * 0.27;
+            l1.setText("Total expenses: " + sum + " of which " + Integer.parseInt(milesT.getText().trim()) * 0.27 + " is for the private car");
+            l2.setText("Total expenses allowed: " + reinburse + " of which " + Integer.parseInt(milesT.getText().trim()) * 0.27 + " is for the private car");
+            if (sum - reinburse > 0) {
+             l3.setText("You must pay the excess which is: " + (sum - reinburse));   
+            } else {
+                l3.setText("You saved: " + (reinburse - sum));
+            }
             
         });
         
@@ -89,6 +157,10 @@ public class Main extends Application {
         gp.add(taxiCharges, 0, 6);
         gp.add(conOrSem,    0, 7);
         gp.add(lod,         0, 8);
+        gp.add(error,       0, 9);
+        gp.add(l1,          0, 10);
+        gp.add(l2,          0, 11);
+        gp.add(l3,          0, 12);
         
         gp.add(daysT,       1, 1);
         gp.add(airT,        1, 2);
@@ -103,7 +175,7 @@ public class Main extends Application {
         gp.setHgap(50);
         gp.setPadding(new Insets(10));
         
-        HBox hb = new HBox(10, enter, clear);
+        HBox hb = new HBox(10, clear, enter);
         hb.setPadding(new Insets(10));
         
         HBox hb2 = new HBox(title);
@@ -111,9 +183,21 @@ public class Main extends Application {
         
         VBox vb = new VBox(10, hb2, gp, hb);
         
-        Scene sc = new Scene(vb, 800, 500);
+        Scene sc = new Scene(vb, 800, 600);
+        sc.getStylesheets().add("styles.css");
         stage.setScene(sc);
         stage.show();
     }
     
+    public static boolean isAlpha(String text) {
+        if (text.contains(" ")) {
+            return true;
+        }
+        for (int i = 0; i < text.length(); i++) {
+            if (('a' <= text.charAt(i) && text.charAt(i) <= 'z') || ('A' <= text.charAt(i) && text.charAt(i) <= 'Z')) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
