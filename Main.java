@@ -34,7 +34,7 @@ public class Main extends Application {
     public void start(Stage stage) {
         stage.setTitle("Travel Expenses");
         GridPane gp = new GridPane();
-        Label title = new Label("Declare all expenses, leave empty if 0");
+        Label title = new Label("Declare all expenses, leave empty if 0:");
         
         Label days = new Label("Number of days on the trip:");
         Label airefare = new Label("Airfare:");
@@ -50,6 +50,8 @@ public class Main extends Application {
         Label l2 = new Label("");
         Label l3 = new Label("");
         
+        Label[] labels = {l1, l2, l3};
+        
         TextField daysT = new TextField();
         TextField airT = new TextField();
         TextField carT = new TextField();
@@ -64,6 +66,10 @@ public class Main extends Application {
         Button clear = new Button("Clear");
         enter.setDisable(true);
         
+        
+        l1.setId("info");
+        l2.setId("info");
+        l3.setId("info");
         error.setId("error");
         title.setId("title");
         
@@ -87,38 +93,46 @@ public class Main extends Application {
         enter.setOnMouseClicked(event ->{
             int sum = 0;
             int reinburse = 0;
-            
+            String message = " cannot contain a letter, a space, or any sort of special character!";
             //Input checks
-            if (isAlpha(daysT.getText())) {
-                error.setText("Days cannot contain a letter or space");
+            if (isNotValid(daysT.getText())) {
+                error.setText("Days" + message);
+                removeAllText(labels);
                 return;
             }
-            if (isAlpha(airT.getText())) {
-                error.setText("Airfare cannot contain a letter or space");
+            if (isNotValid(airT.getText())) {
+                error.setText("Airfare" + message);
+                removeAllText(labels);
                 return;
             }
-            if (isAlpha(carT.getText())) {
-                error.setText("Car rental cannot contain a letter or space");
+            if (isNotValid(carT.getText())) {
+                error.setText("Car rental" + message);
+                removeAllText(labels);
                 return;
             }
-            if (isAlpha(milesT.getText())) {
-                error.setText("Miles cannot contain a letter or space");
+            if (isNotValid(milesT.getText())) {
+                error.setText("Miles cannot" + message);
+                removeAllText(labels);
                 return;
             }
-            if (isAlpha(parkT.getText())) {
-                error.setText("Parking fees cannot contain a letter or space");
+            if (isNotValid(parkT.getText())) {
+                error.setText("Parking fees" + message);
+                removeAllText(labels);
                 return;
             }
-            if (isAlpha(taxiT.getText())) {
-                error.setText("Taxi charges cannot contain a letter or space");
+            if (isNotValid(taxiT.getText())) {
+                error.setText("Taxi charges" + message);
+                removeAllText(labels);
                 return;
             }
-            if (isAlpha(conT.getText())) {
-                error.setText("Conferenc or seminar fees cannot contain a letter or space");
+            if (isNotValid(conT.getText())) {
+                error.setText("Conferenc or seminar fees" + message);
+                removeAllText(labels);
                 return;
             }
-            if (isAlpha(lodT.getText())) {
-                error.setText("Lodging charges cannot contain a letter or space");
+            if (isNotValid(lodT.getText())) {
+                error.setText("Lodging charges" + message);
+                removeAllText(labels);
                 return;
             }
             
@@ -138,12 +152,12 @@ public class Main extends Application {
             reinburse += Integer.parseInt(daysT.getText().trim())* 20;
             reinburse += Integer.parseInt(daysT.getText().trim())* 95;
             reinburse += Integer.parseInt(milesT.getText().trim()) * 0.27;
-            l1.setText("Total expenses: " + sum + " of which " + Integer.parseInt(milesT.getText().trim()) * 0.27 + " is for the private car");
-            l2.setText("Total expenses allowed: " + reinburse + " of which " + Integer.parseInt(milesT.getText().trim()) * 0.27 + " is for the private car");
+            l1.setText("Total expenses: $" + sum + " of which $" + Integer.parseInt(milesT.getText().trim()) * 0.27 + " is for the private car.");
+            l2.setText("Total expenses allowed: $" + reinburse + " of which $" + Integer.parseInt(milesT.getText().trim()) * 0.27 + " is for the private car.");
             if (sum - reinburse > 0) {
-             l3.setText("You must pay the excess which is: " + (sum - reinburse));   
+             l3.setText("You must pay the excess which is: $" + (sum - reinburse) + ".");   
             } else {
-                l3.setText("You saved: " + (reinburse - sum));
+                l3.setText("You saved: $" + (reinburse - sum)+ ".");
             }
             
         });
@@ -189,15 +203,19 @@ public class Main extends Application {
         stage.show();
     }
     
-    public static boolean isAlpha(String text) {
-        if (text.contains(" ")) {
+    public static void removeAllText(Label[] labels) {
+        for (Label label : labels) {
+            label.setText("");
+        }
+    }
+    
+    public static boolean isNotValid(String text) {
+        try {
+            int num = Integer.parseInt(text);
+        } catch(Exception e) {
             return true;
         }
-        for (int i = 0; i < text.length(); i++) {
-            if (('a' <= text.charAt(i) && text.charAt(i) <= 'z') || ('A' <= text.charAt(i) && text.charAt(i) <= 'Z')) {
-                return true;
-            }
-        }
-        return false;
+        return Integer.parseInt(text) < 0;
+
     }
 }
