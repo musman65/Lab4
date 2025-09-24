@@ -6,6 +6,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Created on : Sep 22, 2025, 10:15:36 AM
     Author     : 6298674
 */
+
+.label {
+    -fx-font-style: italic;
+}
+
+#title {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+#info {
+    -fx-font-weight: bold;
+}
+
 #error {
     -fx-text-fill: red;
 }
